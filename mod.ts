@@ -1,12 +1,16 @@
-type Fn = (...args: any[]) => any
+/* I don't know why this is needed */
+type ToInterface<T> =
+    T extends string
+        ? String
+        : T
 
 type Container<A> = {
     pipe<B>(f: (a: A) => B): Container<B>
     get(): A
 } & {
-    [ K in keyof A ]: A[K] extends (...args: infer I) => infer O
+    [ K in keyof ToInterface<A> ]: ToInterface<A>[K] extends (...args: infer I) => infer O
         ? (...args: I) => Container<O>
-        : Container<A[K]>
+        : Container<ToInterface<A>[K]>
 }
 
 const container =
@@ -39,13 +43,14 @@ console.log(
 )
 
 console.log(
-    container<String>("hello")
+    container("hello")
         .length
+        .pipe(x => x * 2)
         .get()
 )
 
 console.log(
-    container<String>("hello")
+    container("hello")
         .repeat(3)
         .get()
 )
