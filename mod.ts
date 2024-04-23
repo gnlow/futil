@@ -4,7 +4,7 @@ type ToInterface<T> =
         ? String
         : T
 
-type Container<A> = {
+export type Container<A> = {
     pipe<B>(f: (a: A) => B): Container<B>
     get(): A
 } & {
@@ -13,7 +13,7 @@ type Container<A> = {
         : Container<ToInterface<A>[K]>
 }
 
-const container =
+export const container =
 <A>
 (a: A): Container<A> => {
     const target = {
@@ -35,22 +35,3 @@ const container =
 
     return proxy
 }
-
-console.log(
-    container(1)
-        .pipe(x => x * 2)
-        .get()
-)
-
-console.log(
-    container("hello")
-        .length
-        .pipe(x => x * 2)
-        .get()
-)
-
-console.log(
-    container("hello")
-        .repeat(3)
-        .get()
-)
