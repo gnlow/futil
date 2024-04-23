@@ -29,4 +29,9 @@ Deno.test("custom function", () => {
             .get(),
         246,
     )
+
+    container("123")
+        // @ts-expect-error: Err<"Type", number, "is not assignable to type", string>
+        .double()
+        .get()
 })

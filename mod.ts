@@ -1,3 +1,5 @@
+type Err<A, B, C, D> = { _: unknown }
+
 /* I don't know why this is needed */
 type ToInterface<T> =
     T extends string
@@ -14,8 +16,10 @@ export type Container<A, Fs> = {
             : Container<ToInterface<A>[K], Fs>
 } & {
     [ K in keyof Fs ]:
-        Fs[K] extends (a: A) => infer B
-            ? () => Container<B, Fs>
+        Fs[K] extends (i: infer I) => infer O
+            ? I extends A
+                ? () => Container<O, Fs>
+                : Err<"Type", I, "is not assignable to type", A>
             : never
 }
 
