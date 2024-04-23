@@ -1,6 +1,10 @@
 # futil
 
 ```ts
+import { makeContainer } from "https://esm.sh/gh/gnlow/futil/mod.ts"
+```
+
+```ts
 const container = makeContainer({})
 
 container("hello")
