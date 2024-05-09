@@ -8,6 +8,7 @@ type ToInterface<T> =
 
 export type Container<A, Fs> = {
     pipe<B>(f: (a: A) => B): Container<B, Fs>
+    bypass(f: (a: A) => void): Container<A, Fs>
     get(): A
 } & {
     [ K in keyof ToInterface<A> ]:
@@ -33,7 +34,11 @@ export const makeContainer =
             pipe<B>(f: (a: A) => B) {
                 return container(f(a))
             },
-            get() { return a }
+            bypass(f: (a: A) => void) {
+                f(a)
+                return container(a)
+            },
+            get() { return a },
         }
         const proxy = new Proxy(target, {
             get(target, prop) {
